@@ -6,7 +6,7 @@ public class player : MonoBehaviour {
 
 	bool left;
 	bool right;
-	bool up;
+	public bool IsGrounded;
 	public float mass = 1.0f;
 	public Vector3 velocity;
 	public Vector3 maxVelocity;
@@ -34,32 +34,47 @@ public class player : MonoBehaviour {
 			// apply force to right
 			UpdateVelocity(velocity, maxVelocity, acceleration);
 			UpdatePosition();
+			transform.localRotation = Quaternion.Euler(0, 0, 0);
+		
         }
 
-		if (left)
+		else if (left)
         {
 			// apply force to left
 			UpdateVelocity(-velocity, -maxVelocity, -acceleration);
 			UpdatePosition();
-        }
+			transform.localRotation = Quaternion.Euler(0, 180, 0);
 
-            // jump
-        if (IsGrounded() && Input.GetKeyDown(KeyCode.UpArrow))
+		}
+
+			// jump
+        /*if (IsGrounded())
         {
-				float jumpVelocity = 50f;
-				rigidbody2d.velocity = Vector2.up * jumpVelocity;
+			DrawGround();
+        }*/
+ 
+        if (IsGrounded && Input.GetKeyDown(KeyCode.UpArrow))
+        {
+			GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 2000));
+			/*float jumpVelocity = 50f;
+			rigidbody2d.velocity = Vector2.up * jumpVelocity;*/
         }
 			
-        
 	}
-	//removes infinite jump
-	private bool IsGrounded()
+	//removes infinite jump ground
+	/*private bool IsGrounded()
     {
-		RaycastHit2D raycastHit2d = Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, .1f, platformsLayerMask);
+		RaycastHit2D raycastHit2d = Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size/2, 0f, Vector2.down, 2.0f, platformsLayerMask);
 		Debug.Log(raycastHit2d.collider);
 		return raycastHit2d.collider != null;
     }
 
+	//show ground collison
+	void DrawGround()
+    {
+		Debug.DrawLine(new Vector3(boxCollider2d.bounds.center.x - (boxCollider2d.bounds.size.x / 2), boxCollider2d.bounds.center.y - (boxCollider2d.bounds.size.y / 2)),
+					   new Vector3(boxCollider2d.bounds.center.x + (boxCollider2d.bounds.size.x / 2), boxCollider2d.bounds.center.y - (boxCollider2d.bounds.size.y / 2)));
+	}*/
 	void GetKeys()
     {
 		if (Input.GetKey(moveLeft))
